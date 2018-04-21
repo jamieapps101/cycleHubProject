@@ -24,3 +24,8 @@ std::vector<struct hireRecordStruct> hireManager::getRecords()
 {
   return Records;
 }
+
+void hireManager::printContents()
+{
+  int number =
+}

@@ -66,3 +66,19 @@ int hubClass::getTotalBikes()
 {
   return bikeStore.size();
 }
+
+void hubClass::printContents()
+{
+  std::stack<bike> tempBikeStore;
+  while (!bikeStore.empty())
+  {
+    std::cout << bikeStore.top() << ', ';
+    tempBikeStore.push(bikeStore.top());
+    bikeStore.pop();
+  }
+  while (!tempBikeStore.empty())
+  {
+    bikeStore.push(tempBikeStore.top());
+    tempBikeStore.pop();
+  }
+}

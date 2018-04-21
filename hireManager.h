@@ -19,4 +19,5 @@ class hireManager
     void addRecord(struct hireRecordStruct input);
     std::vector<struct hireRecordStruct> checkRecords(int currentTime);
     std::vector<struct hireRecordStruct> getRecords();
+    void printContents();
 };

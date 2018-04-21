@@ -17,4 +17,5 @@ class hubClass
     int returnBike(bike *topBike);
     int takeBike(bike *topBike);
     int getTotalBikes();
+    void printContents()
 };
