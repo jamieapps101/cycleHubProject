@@ -1,7 +1,10 @@
 #include <stack>
 #include <stdlib.h>     /* srand, rand */
 #include <time.h>       /* time */
-#include "bike.h"
+#ifndef bikeDefined
+  #include "bike.h"
+#endif
+#include <iostream>
 
 class hubClass
 {
@@ -10,7 +13,8 @@ class hubClass
     char makeColour(int totalColours);
 
   public:
-    void init(int totalBikes);
-    int addBike(bike *topBike);
+    int addBike(int SN);
+    int returnBike(bike *topBike);
     int takeBike(bike *topBike);
+    int getTotalBikes();
 };

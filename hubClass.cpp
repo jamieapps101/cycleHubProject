@@ -3,7 +3,6 @@
 
 char hubClass::makeColour(int totalColours)
 {
-  srand (time(NULL)); // initialise random algorithm seed
   int colourNum = rand() % totalColours; // genterate a random number between 0 and totalColours
   switch(colourNum)
   {
@@ -40,19 +39,16 @@ char hubClass::makeColour(int totalColours)
   }
 }
 
-void hubClass::init(int totalBikes)
+int hubClass::addBike(int SN)
 {
-  int a = 1;
-  for(a = 1; a <= totalBikes; a++)
-  {
-    bike *newBike;
-    (*newBike).setSN(a);
-    (*newBike).setColour(makeColour(6));
-    addBike(newBike);
-  }
+  bike newBike;
+  (newBike).setSN(SN);
+  (newBike).setColour(makeColour(6));
+  bikeStore.push(newBike);
+  return bikeStore.size();
 }
 
-int hubClass::addBike(bike *topBike)
+int hubClass::returnBike(bike *topBike)
 {
   bikeStore.push(*topBike);
   return bikeStore.size();
@@ -60,7 +56,13 @@ int hubClass::addBike(bike *topBike)
 
 int hubClass::takeBike(bike *topBike)
 {
-  //*topBike = bikeStore.top();
-  //bikeStore.pop();
+  *topBike = bikeStore.top();
+  bikeStore.pop();
+  return bikeStore.size();
+}
+
+
+int hubClass::getTotalBikes()
+{
   return bikeStore.size();
 }

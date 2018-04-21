@@ -1,2 +1,2 @@
-g++ -o run main.cpp hub.cpp bike.cpp
+./build
 ./run

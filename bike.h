@@ -1,3 +1,5 @@
+#define bikeDefined
+
 class bike
 {
   private:
