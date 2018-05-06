@@ -1,10 +1,14 @@
 #include <stack>
 #include <stdlib.h>     /* srand, rand */
 #include <time.h>       /* time */
+#include <iostream>
+
 #ifndef bikeDefined
   #include "bike.h"
+  #define bikeDefined
 #endif
-#include <iostream>
+
+#define hubDefined
 
 class hubClass
 {
@@ -17,5 +21,5 @@ class hubClass
     int returnBike(bike *topBike);
     int takeBike(bike *topBike);
     int getTotalBikes();
-    void printContents()
+    void printContents();
 };

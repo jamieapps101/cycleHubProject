@@ -1,0 +1,2 @@
+clear
+g++ -o runAllocate allocateBikes.cpp hubClass.cpp bike.cpp

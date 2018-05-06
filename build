@@ -1,1 +1,1 @@
-g++ -o run main.cpp hubClass.cpp bike.cpp hireManager.cpp
+g++ -o run miniMain.cpp hubClass.cpp bike.cpp hireManager.cpp

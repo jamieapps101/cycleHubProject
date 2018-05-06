@@ -72,7 +72,7 @@ void hubClass::printContents()
   std::stack<bike> tempBikeStore;
   while (!bikeStore.empty())
   {
-    std::cout << bikeStore.top() << ', ';
+    std::cout << bikeStore.top().getSN() << ", ";
     tempBikeStore.push(bikeStore.top());
     bikeStore.pop();
   }

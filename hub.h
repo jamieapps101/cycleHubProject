@@ -13,4 +13,5 @@ class hubClass
     void init(int totalBikes);
     int addBike(bike *topBike);
     int takeBike(bike *topBike);
+    int totalBikes();
 };

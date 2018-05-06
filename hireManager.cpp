@@ -27,5 +27,5 @@ std::vector<struct hireRecordStruct> hireManager::getRecords()
 
 void hireManager::printContents()
 {
-  int number =
+  //int number =
 }

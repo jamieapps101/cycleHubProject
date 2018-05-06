@@ -60,7 +60,12 @@ int hubClass::addBike(bike *topBike)
 
 int hubClass::takeBike(bike *topBike)
 {
-  //*topBike = bikeStore.top();
-  //bikeStore.pop();
+  *topBike = bikeStore.top();
+  bikeStore.pop();
+  return bikeStore.size();
+}
+
+int hubClass::totalBikes()
+{
   return bikeStore.size();
 }
