@@ -1,12 +1,12 @@
 #include "hireManager.h"
 
 
-void hireManager::addRecord(struct hireRecordStruct input)
+void hireManager::addRecord(struct hireRecordStruct input) // adds record struct as element of storage vector
 {
   Records.push_back(input);
 }
 
-void hireManager::deleteRecord(struct hireRecordStruct input)
+void hireManager::deleteRecord(struct hireRecordStruct input) // finds vector element with matching serial number, then erases it
 {
   for(int a = 0; a < Records.size(); a++)
   {
@@ -17,7 +17,7 @@ void hireManager::deleteRecord(struct hireRecordStruct input)
   }
 }
 
-std::vector<struct hireRecordStruct> hireManager::checkRecords(int currentTime)
+std::vector<struct hireRecordStruct> hireManager::checkRecords(int currentTime) // checks records for bikes needing to be returned
 {
   std::vector<struct hireRecordStruct> recordsToReturn;
   int a;
@@ -32,12 +32,12 @@ std::vector<struct hireRecordStruct> hireManager::checkRecords(int currentTime)
   return(recordsToReturn);
 }
 
-std::vector<struct hireRecordStruct> hireManager::getRecords()
+std::vector<struct hireRecordStruct> hireManager::getRecords() // returns entire record struct
 {
   return Records;
 }
 
-void hireManager::printContents()
+void hireManager::printContents() // does what it says on the tin
 {
   //std::cout << "There are " << Records.size() << " records" << std::endl;
   for(int a = 0; a < Records.size(); a++)
@@ -49,7 +49,7 @@ void hireManager::printContents()
   }
 }
 
-void hireManager::printContentsToFile(std::string input)
+void hireManager::printContentsToFile(std::string input)// opens file stream, then does what it says on the tin
 {
   std::ofstream fileOutStream;
   fileOutStream.open(input);

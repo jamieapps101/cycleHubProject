@@ -39,7 +39,7 @@ char hubClass::makeColour(int totalColours)
   }
 }
 
-int hubClass::addBike(int SN)
+int hubClass::addBike(int SN) // makes a new bike object and adds it to main storage stack within hub object.
 {
   bike newBike;
   (newBike).setSN(SN);
@@ -48,13 +48,13 @@ int hubClass::addBike(int SN)
   return bikeStore.size();
 }
 
-int hubClass::returnBike(bike *topBike)
+int hubClass::returnBike(bike *topBike) // simply adds bike object on input to the stack
 {
   bikeStore.push(*topBike);
   return bikeStore.size();
 }
 
-int hubClass::takeBike(bike *topBike)
+int hubClass::takeBike(bike *topBike) // takes top element of stack, and returns it via pointer, then pops top element
 {
   *topBike = bikeStore.top();
   bikeStore.pop();
@@ -62,13 +62,13 @@ int hubClass::takeBike(bike *topBike)
 }
 
 
-int hubClass::getTotalBikes()
+int hubClass::getTotalBikes() // does what it says on the tin
 {
   return bikeStore.size();
 }
 
-void hubClass::printContents()
-{
+void hubClass::printContents()// does what it says on the tin, this reads elements one by one,
+{                             //  printing them and saving them to temp stack. then transfers them all back
   std::stack<bike> tempBikeStore;
   while (!bikeStore.empty())
   {

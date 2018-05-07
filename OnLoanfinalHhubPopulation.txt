@@ -1,1 +1,0 @@
-Bike No: 12, going to: e, over: 21hours, starting at: 23
