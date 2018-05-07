@@ -4,7 +4,9 @@
 #include <stdlib.h>     /* srand, rand */
 //#include <time.h>       /* time */
 #include "hireManager.h"
+#include<fstream>
 #include <string.h>
+#include <sstream>
 #include <ctime>
 #define A 0
 #define B 1
@@ -13,7 +15,8 @@
 #define E 4
 #define F 5
 
-#define fileName "hubPopulations.txt"
+const std::string inputFileName = "hubPopulations.txt";
+#define outputFileName "finalHhubPopulation.txt"
 
 #define TOTALHUBS 6
 #define TOTALBIKES 30
@@ -37,9 +40,10 @@ int main()
 
   // Read files here
   std::ifstream inputFile;
-  inputFile.open(fileName);
+  inputFile.open(inputFileName);
   if(inputFile.is_open() != true)
   {
+    std::cout << "Cannot open file named: " << inputFileName << ", exiting" << std::endl;
     inputFile.close();
     return 1;
   }
@@ -70,7 +74,10 @@ int main()
 
   for(int a = 0; a < TOTALHUBS; a++)
   {
-    std::cout << "There are " <<  hub.at(a).getTotalBikes() << " bikes at hub " << (char)(a + 65) << std::endl;
+    //std::cout << "There are " <<  hub.at(a).getTotalBikes() << " bikes at hub " << (char)(a + 65) << std::endl;
+    std::cout << "Hub " << (char)(65 + a) << " contains: ";
+    hub.at(a).printContents();
+    std::cout << std::endl;
   }
 
   hireManager HM;
@@ -87,7 +94,11 @@ int main()
        int b = 0;
        for(b = 0; b < bikesToReturn.size(); b++)
        {
-         std::cout << "SN: " << bikesToReturn.at(b).bikeObject.getSN() << ", hired at: " << bikesToReturn.at(b).hireTime << std::endl;
+         std::cout << "Bike No " << bikesToReturn.at(b).bikeObject.getSN() << ", which  was hired at: " << bikesToReturn.at(b).hireTime << std::endl;
+         int hubToReturnTo = (int)bikesToReturn.at(b).destination - 'A';
+         bike returnBike = bikesToReturn.at(b).bikeObject;
+         hub.at(hubToReturnTo).returnBike(&returnBike);
+         HM.deleteRecord(bikesToReturn.at(b));
        }
      }
 
@@ -97,11 +108,11 @@ int main()
     {
       std::cout << "Hire new bike? (Y/N)" << std::endl;
       std::string hireInput = toLowerCase(getStringInput());
-      if(hireInput.compare("Y") == 0) // aka they answered yes
+      if(hireInput.compare("y") == 0) // aka they answered yes
       {
         requirementMet = true;
         std::vector<int> nonEmptyHubs = getnonEmptyHubs(hub);
-        if(nonEmptyHubs.size() > 0)
+        if(nonEmptyHubs.size() < 6)
         {
           std::cout << "The following hubs have bikes in: ";
           int a = 0;
@@ -124,11 +135,12 @@ int main()
         while(validInput == false)
         {
           std::cout << "Please pick a hub to hire a bike from, or type 'X' to cancel" << std::endl;
-          originInput = (toLowerCase(getStringInput()))[0];
+          std::string temp = toLowerCase(getStringInput());
+          originInput = (char)temp.at(0);
           int a = 0;
           for(a = 0; a < nonEmptyHubs.size(); a++)
           {
-            if(originInput == (char)(nonEmptyHubs.at(a)+'a'))
+            if(originInput == (nonEmptyHubs.at(a)+'a'))
             {
               validInput = true;
             }
@@ -139,26 +151,32 @@ int main()
             requirementMet = false;
           }
         }
-        validInput = false;
-        while(validInput == false) // we know where from
+        if(requirementMet == true)
         {
-          char destinationInput = (toLowerCase(getStringInput()))[0];
-          if(destinationInput >= 'a' && destinationInput < ('a' + TOTALHUBS))
+          char destinationInput;
+          validInput = false;
+          while(validInput == false) // we know where from  <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Is this loop meant to be here?,, this might be asking twice and causing double letter
           {
-            validInput = true;
+            std::cout << "Please pick a destinaton hub" << std::endl;
+            destinationInput =  (toLowerCase(getStringInput()))[0];
+            if(destinationInput >= 'a' && destinationInput < ('a' + TOTALHUBS))
+            {
+              validInput = true;
+            }
           }
+          int randHireTime = rand() % 24; // pick a random duration to hire bike
+          struct hireRecordStruct newRecord;
+          bike newBikeOut; // create bike object to tranfer details
+          int bikesLeft = hub.at(originInput - 'a').takeBike(&newBikeOut); // copy over top bike object, and remove form internal stack
+          newRecord.bikeObject = newBikeOut; // insert the bike obect to the record struct
+          newRecord.hireTime = currentSimulationTime; // record current time
+          newRecord.hireDuration = randHireTime; // record random hire time
+          newRecord.destination = destinationInput-'a' + 'A'; // record desintation input
+          HM.addRecord(newRecord); // add record to hire manager object record vector
+          std::cout << "Bike number " << newBikeOut.getSN() << " will be hired for " << randHireTime << " hours, thank you." << std::endl;
         }
-        int randHireTime = rand() % 24; // pick a random duration to hire bike
-        std::cout << "This bike will be hired for " << randHireTime << "hours, thank you." << std::endl;
-        struct hireRecordStruct newRecord;
-        bike newBikeOut; // create bike object to tranfer details
-        int bikesLeft = hub.at(originInput - 'a').takeBike(&newBikeOut); // copy over top bike object, and remove form internal stack
-        newRecord.bikeObject = newBikeOut; // insert the bike obect to the record struct
-        newRecord.hireTime = currentSimulationTime; // record current time
-        newRecord.hireDuration = randHireTime; // record random hire time
-        HM.addRecord(newRecord); // add record to hire manager object record vector
       }
-      else if(hireInput.compare("N") == 0)
+      else if(hireInput.compare("n") == 0)
       {
         std::cout << "OK!" << std::endl;
         requirementMet = true;
@@ -173,14 +191,41 @@ int main()
     int g = 0;
     for(g = 0; g < TOTALHUBS; g++)
     {
-      std::cout "Hub " << (char)(g+65) << "has bikes: ";
+      std::cout << "Hub " << (char)(g+65) << " has bikes: ";
       hub.at(g).printContents();
-      std::cout <<std::endl;
+      std::cout << std::endl;
     }
+    std::cout << "The following bikes are on loan:" << std::endl;
+    HM.printContents();
+    std::cout << std::endl << std::endl;
   }
+
   // print all bikes on hire
-    std::cout << "End of Program, Thank You" << std::endl;
-  return 0;
+  std::string templateString = outputFileName;
+  for(int a = 0; a < TOTALHUBS; a++)
+  {
+    std::ofstream fileOutStream;
+    std::stringstream ss;
+    ss << "Hub" << (char)(65+a) << outputFileName;
+    std::string HubNameString = ss.str();
+    fileOutStream.open (HubNameString);
+    fileOutStream << char(65 + a) << ",";
+    while(hub.at(a).getTotalBikes() > 0)
+    {
+      bike currentBike;
+      hub.at(a).takeBike(&currentBike);
+      fileOutStream << currentBike.getSN() << ":" <<currentBike.getColour() << ",";
+    }
+    fileOutStream << std::endl;
+    fileOutStream.close();
+  }
+  std::ofstream fileOutStream;
+  std::stringstream ss;
+  ss << "OnLoan" << outputFileName;
+  std::string HubNameString = ss.str();
+  HM.printContentsToFile(HubNameString);
+  std::cout << "End of Program, Thank You" << std::endl;
+  return 1;
 }
 
 std::string getStringInput() // a private function that gets a string input from cin
